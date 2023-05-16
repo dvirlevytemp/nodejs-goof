@@ -3,44 +3,45 @@ name: AppSec Israel 2023
 on: push
 
 jobs:  
-  ZAP:
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-    steps:
-      - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.7.0
-        with:
-          target: 'https://juice-shop.herokuapp.com/'
-  
-  Sonarcloud:
-      name: SonarCloud
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-          with:
-            fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-        - name: SonarCloud Scan
-          uses: SonarSource/sonarcloud-github-action@master
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  Snyk:
-    name: snyk
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
   HoruSec:
     runs-on: ubuntu-latest
-    name: Horusec Scan
     steps:
+      - name: checkout  
+        uses: actions/checkout@v3
       - name: Run Horusec
         id: run_horusec
-        uses: fike/horusec-action@v0.1
+        uses: fike/horusec-action@v0.2.2
         with:
-          arguments: -p="./"
+          arguments: -p ./ --log-level TRACE
+          
+#   ZAP:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       issues: write
+#     steps:
+#       - name: ZAP Scan
+#         uses: zaproxy/action-baseline@v0.7.0
+#         with:
+#           target: 'https://juice-shop.herokuapp.com/'
+  
+#   Sonarcloud:
+#       name: SonarCloud
+#       runs-on: ubuntu-latest
+#       steps:
+#         - uses: actions/checkout@v3
+#           with:
+#             fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+#         - name: SonarCloud Scan
+#           uses: SonarSource/sonarcloud-github-action@master
+#           env:
+#             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+#             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#   Snyk:
+#     name: snyk
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@master
+#       - name: Run Snyk to check for vulnerabilities
+#         uses: snyk/actions/node@master
+#         env:
+#           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
